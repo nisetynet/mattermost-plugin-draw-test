@@ -1,3 +1,22 @@
+## react-paint
+
+changes:
+* Updated some dependencies
+* Implemented fill feature/button
+* Added white color
+* Removed undo history limits (was 9 iirc)
+* Using updated react-paint temporary fork(https://github.com/nisetynet/react-paint-test)
+
+How to build?
+```bash
+make dist
+```
+
+You can download and try prebuilt plugin from [here](temp-release/com.mattermost.draw-plugin-0.0.5.tar.gz).
+
+hope this helps
+_____________________________________________________________
+
 <h1 align="center">
   <img src="./images/plugin-draw-logo.png" alt="Draw plugin logo" width="200">
   <br/>
