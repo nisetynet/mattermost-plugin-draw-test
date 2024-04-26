@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-modal';
-import {CirclePicker} from 'react-color';
+import {CirclePicker, SketchPicker} from 'react-color';
 
 import ReactPaint from '../paint';
 
@@ -27,6 +27,75 @@ const customStyles = {
     zIndex: 1000,
   }
 };
+
+// WIP must learn js and react first
+// https://legacy.reactjs.org/docs/composition-vs-inheritance.html
+// TODO bind 
+// https://stackoverflow.com/questions/66590082/how-to-prevent-re-rendering-of-components-that-have-not-changed
+/*
+const CustomSketchPicker = () =>{
+     const [color, setColor] = useState("#000000");
+
+  return (
+    <SketchPicker
+                        color={color}
+                        onChangeComplete={ (new_color)=>{ setColor(new_color);} }
+                        disableAlpha={true}
+                        />
+);
+
+}
+*/
+/*
+class CustomSketchPicker extends React.Component{ 
+    constructor(props){
+        super(props);
+        console.log("props "+JSON.stringify(props));
+        this.isHidden=false;
+        this.color=props["color"];
+    }
+
+    render(){
+        if (this.isHidden){
+
+            return <div>  <button
+                            id='open_color_picker_button'
+                            type='button'
+                            className='btn'
+                            onClick={() => {
+                                this.isHidden=false;
+                        }}
+                            >
+                        {'Open Color Picker'}
+                        </button></div>
+        }
+
+
+        return  <div >
+
+            <CustomSketchPicker
+                        id='color_picker'
+                        color={this.color}
+                        onChangeComplete={ (color)=>{ this.color=color;} }
+                        disableAlpha={true}
+                        />
+                       
+                    <button
+                            id='close_color_picker_button'
+                            type='button'
+                            className='btn'
+                            onClick={() => {
+                              this.isHidden=true; 
+
+                             }}
+                            >
+                        {'Close Color Picker'}
+                        </button> 
+                    </div>
+    
+    }
+}
+*/
 
 Modal.setAppElement('#root');
 
@@ -78,6 +147,7 @@ export default class Root extends React.Component {
             ],
             historyCursor: 0,
         };
+        this.isShowingColorPicker=false;
     }
 
     isSmall = () => {
@@ -102,6 +172,38 @@ export default class Root extends React.Component {
             img.src = event.target.result;
         };
         reader.readAsDataURL(e.target.files[0]);
+    }
+
+    fill = (event) => {
+     //   console.log("fill enter");
+     //   console.log(event);
+        // https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API
+        // https://stackoverflow.com/questions/42932645/creating-and-saving-to-file-new-png-image-in-javascript
+        let canvas = document.createElement("canvas");
+        
+        let history=this.state.history[0];
+        canvas.width=history.width;
+        canvas.height=history.height;
+
+        const ctx = canvas.getContext("2d");
+        console.log("fill: "+ JSON.stringify(this.state.brushColor));
+        
+        ctx.fillStyle = this.state.brushColor["hex"];
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        
+
+
+      //  console.log("created canvas");
+
+        let img = new Image();
+        img.onload = () => {
+            this.paintRef.current.setImage(img);
+//        console.log("fill image loaded");
+        };
+        img.src = canvas.toDataURL();
+
+        
+        // console.log("fill end");
     }
 
     generateId = () => {
@@ -144,7 +246,7 @@ export default class Root extends React.Component {
             imageData,
             history: [
                 imageHistoryEntry,
-                ...this.state.history.slice(this.state.historyCursor, 9),
+                ...this.state.history.slice(),
             ],
             historyCursor: 0,
         });
@@ -224,6 +326,7 @@ export default class Root extends React.Component {
                     className={`icon icon-close ${styles.iconClose}`}
                     aria-label="Close Icon"
                 />
+                
                 <div>
                     <CirclePicker
                         styles={{default: {card: {justifyContent: 'space-between'}}}}
@@ -233,13 +336,21 @@ export default class Root extends React.Component {
                         circleSpacing={0}
                         width={this.isSmall() ? window.innerWidth - 30 : 850}
                         colors={[
-                            '#000000', '#f44336', '#e91e63', '#9c27b0',
+                            '#000000', '#ffffff', '#f44336', '#e91e63', '#9c27b0',
                             '#673ab7', '#3f51b5', '#2196f3', '#03a9f4',
                             '#00bcd4', '#009688', '#4caf50', '#8bc34a',
                             '#cddc39', '#ffeb3b', '#ffc107', '#ff9800',
                             '#ff5722', '#795548',
                         ]}
                     />
+                    {/*
+                         <CustomSketchPicker
+                        color={this.state.brushColor}
+                        onChangeComplete={ (color)=>{ this.state.brushColor=color;} }
+                        disableAlpha={true}
+                        />
+                    */}
+
                     <div className={styles.brushWidthContainer}>
                         <i
                             className='fa fa-undo'
@@ -277,6 +388,13 @@ export default class Root extends React.Component {
                             min={1}
                             className={styles.range}
                         />
+                        <button
+                            type='button'
+                            className='btn'
+                            onClick={this.fill}
+                            >
+                        {'Fill'}
+                        </button>
                     </div>
                     <div className={this.isSmall() ? styles.paintContainerSmall : styles.paintContainer}>
                         <ReactPaint

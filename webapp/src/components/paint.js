@@ -110,7 +110,8 @@ export default class ReactPaint extends Component {
 
     onDraw = () => {
         const context = this.getContext();
-
+        // console.log("draw color: " + JSON.stringify(this.props.brushCol));
+        
         this.props.onDraw(
             this.canvas.current.toDataURL(),
             {
