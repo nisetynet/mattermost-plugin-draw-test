@@ -43,7 +43,7 @@
     "react-dom": "18.2.0",
     "react-gui": "0.2.1",
     "react-modal": "^3.15.1",
-    "react-paint-test": "file:/media/ssd2/temp/react-paint-test/",
+    "react-paint-test": "git+https://github.com/nisetynet/react-paint-test.git",
     "react-redux": "8.0.2",
     "redux": "4.2.0",
     "superagent": "8.0.0"
