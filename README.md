@@ -1,4 +1,5 @@
-## react-paint
+## mattermost-plugin-draw-test
+Temporary fork of https://github.com/jespino/mattermost-plugin-draw
 
 changes:
 * Updated some dependencies
@@ -13,6 +14,9 @@ make dist
 ```
 
 You can download and try prebuilt plugin from [here](temp-release/com.mattermost.draw-plugin-0.0.5.tar.gz).
+
+demo video: https://www.youtube.com/watch?v=B8Nr5r73CqI
+
 
 hope this helps
 _____________________________________________________________
